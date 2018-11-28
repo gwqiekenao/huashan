@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.pms.mapper.caigou.ProjectMapper" >
+	<sql id="query_project_where">
+	 		<if test="projectCode != null and projectCode != '' and projectCode !='undefined'">
+				and projectCode like '%${projectCode}%'
+			</if>
+			<if test="projectName != null and projectName != '' and projectName !='undefined'">
+				and projectName like '%${projectName}%'
+			</if>
+			and isFlag=0
+	</sql>
+	
+	<select id="getCount" resultType="int">
+		select count(*) from project
+		<where>
+			<include refid="query_project_where"></include>
+		</where>
+	</select>
+	
+	<select id="findProject" resultType="Project">
+		select * from project  
+		<where>
+			<include refid="query_project_where"></include>
+		</where>
+		order by createTime desc
+		limit #{pageModel.pageData},#{pageModel.eachPageNum} 
+		
+	</select>
+	
+	<select id="findAllProject" resultType="Project">
+		select * from project  
+		where isFlag = 0
+		order by createTime desc
+	</select>
+	
+	<select id="findProById" resultType="Project">
+		select * from project where id=#{id}
+	</select>
+	
+	<select id="findProByCode" resultType="Project">
+		select * from project where projectCode=#{projectCode}
+	</select>
+	
+	<update id="updateProject" parameterType="project" >
+        update project
+        <set >
+            <if test="projectName != null and projectName != ''" >
+                projectName=#{projectName},
+            </if>
+            <if test="projectType != null and projectType != ''" >
+                projectType=#{projectType},
+            </if>
+            <if test="moneyType != null and moneyType != ''" >
+                moneyType=#{moneyType},
+            </if>
+            <if test="contractMoney != null" >
+                contractMoney=#{contractMoney},
+            </if>
+            <if test="estimateMoney != null" >
+                estimateMoney=#{estimateMoney},
+            </if>
+            <if test="materialMoney != null" >
+                materialMoney=#{materialMoney},
+            </if>
+            <if test="projectManager != null and projectManager != ''" >
+                projectManager=#{projectManager},
+            </if>
+            <if test="managerTel != null and managerTel != ''" >
+                managerTel=#{managerTel},
+            </if>
+            <if test="managerIdCard != null and managerIdCard != ''" >
+                managerIdCard=#{managerIdCard},
+            </if>
+            <if test="projectAddress != null and projectAddress != ''" >
+                projectAddress=#{projectAddress},
+            </if>
+            <if test="projectInfo != null and projectInfo != ''" >
+                 projectInfo=#{projectInfo},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    
+    <insert id="insertProject" parameterType="project" >
+        insert into project(projectCode, projectName, projectType, moneyType,contractMoney,
+        estimateMoney, materialMoney, projectManager,managerTel,managerIdCard,projectAddress,projectInfo,createUser)
+        
+        values(#{projectCode}, #{projectName},#{projectType},#{moneyType},#{contractMoney},
+        #{estimateMoney},#{materialMoney},#{projectManager},#{managerTel}, #{managerIdCard},#{projectAddress},#{projectInfo},#{createUser})
+    </insert>
+    
+    <update id="deletePro" >
+        update project set isFlag=1 
+        where <foreach collection="codes" item="code" separator="or" >
+        	projectCode=#{code}
+        </foreach>
+    </update>
+</mapper>

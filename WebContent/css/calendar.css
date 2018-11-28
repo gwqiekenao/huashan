@@ -1,0 +1,34 @@
+﻿@charset "utf-8";
+/* CSS Document */
+/* 日历 */
+#calendarWarpper{width: 260px;z-index:9998;position:absolute;display: none}
+#calendarPanel{background-color:#fff;border:solid 1px #999; position: absolute;top:0;}
+	.calendarForm{text-align: center;float: left;border-right: solid 1px #999;}
+	#calendarPanel .calendarTitle{background-color: #004DA3;text-align: center; font-family: Arial; font-size: 13px; font-weight: normal; height: 30px; margin: 0;}
+	#calendarPanel .calendarTitle a,#calendarPanel span{display: inline-block; vertical-align: middle; text-decoration: none; line-height: 30px; width: 14.28%; height: 30px;font-family: 'SimSun'}
+	.calendarForm span{cursor: default; border-bottom: solid 1px #ddd; color: #555;}
+	#calendarPanel .calendarTitle a{ color: #fff;}
+	#calendarPanel .calendarTitle a:hover{background-color:#0B82CB; }
+	#calendarPanel .calendarTitle a.monSelect{ width: 100%; cursor: default;}
+	.calendarTitle .monSelectBox{position: absolute;top: 30px;left: 0;z-index: 10;width:100%;background: #fff;}
+	#calendarPanel .yearBox{height: 108px;border-bottom: solid 1px #eee; overflow:auto;}
+	#calendarPanel .yearBox span{display: inline-block;width: 25%;height: 20px;border:none; color: #1374b1;cursor: pointer;line-height: 20px;}
+	#calendarPanel .yearBox span:hover{background: #versionsb;} #calendarPanel .yearBox .selected{background: #cbeeff;}
+	#calendarPanel .monthBox span{display: inline-block;width: 16.66%;height: 20px;border:none; color: #1374b1;line-height: 20px;}
+	#calendarPanel .monthBox span:hover{background: #versionsb;} #calendarPanel .monthBox span.selected{background: #cbeeff;}
+	#calendarPanel .calendarTitle .currYear,#calendarPanel .calendarTitle .currMon{color: #fff;}
+	#calendarPanel .preYear,#calendarPanel .preMon,#calendarPanel .nextMon,#calendarPanel .nextYear{
+		width: 30px;height: 30px;text-align: center;font:14px/30px 'SimSun'; position: absolute;display: block;color: #fff;cursor: pointer;
+	}
+	#calendarPanel .preYear:hover,#calendarPanel .preMon:hover,#calendarPanel .nextMon:hover,#calendarPanel .nextYear:hover{
+		text-decoration: none;background: #0B82CB;
+	}
+	#calendarPanel .preYear{left:0} #calendarPanel .preMon{left: 30px;} #calendarPanel .nextMon{right: 30px;} #calendarPanel .nextYear{right: 0;}
+		.days a{background-color: #f3f3f3;float: left; width: 14.285%; height: 23px; text-decoration: none; color: #1374b1; line-height: 23px; cursor: default;}
+		.days a:hover{background-color: #versionsb;}
+		.days a.current{font-weight: bold; color: #fff;background: #f26101;}
+		.days a.disabled{color: #999; background-color: #fcfcfc}
+		.days a.disabled:hover{background: #fcfcfc;}
+		.days a.festival{font-weight: bold;color: #ff6601;font-family: 'KaiTi'}
+.days .today{ background-color: #FFE4versions}
+.tc input{width:50px;height:25px;line-height:25px;cursor:pointer;text-align:center;background-color:#0874b7;color:#fff;border-radius:3px;}

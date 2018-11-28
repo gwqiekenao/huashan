@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.pms.mapper.hetong.SupplierMapper" >
+ <sql id="query_supplier_where">
+	 		<if test="supplierCode != null and supplierCode != '' and supplierCode !='undefined'">
+				and supplierCode like '%${supplierCode}%'
+			</if>
+			<if test="supplierName != null and supplierName != '' and supplierName !='undefined'">
+				and supplieName like '%${supplierName}%'
+			</if>
+			<if test="supplierType != null and supplierType != '' and supplierType !='undefined'">
+				and supplierType like '%${supplierType}%'
+			</if>
+			and isFlag=0
+	</sql>
+	
+	<select id="getCount" resultType="int">
+		select count(*) from supplier
+		<where>
+			<include refid="query_supplier_where"></include>
+		</where>
+	</select>
+	
+	<select id="findSupplier" resultType="Supplier">
+		select * from supplier  
+		<where>
+			<include refid="query_supplier_where"></include>
+		</where>
+		order by createTime desc
+		limit #{pageModel.pageData},#{pageModel.eachPageNum} 
+		
+	</select>
+	
+	<select id="findAllSupplier" resultType="Supplier">
+		select * from supplier  
+		where isFlag = 0
+		order by createTime desc
+	</select>
+	
+	<select id="findSupByCode" resultType="Supplier" parameterType="String">
+		select * from supplier where supplierCode = #{supplierCode}
+	</select>
+	
+	<update id="deleteSupplier" >
+        update supplier set isFlag=1 
+        where <foreach collection="codes" item="code" separator="or" >
+        	supplierCode=#{code}
+        </foreach>
+    </update>
+    
+    <update id="updateSupplier" parameterType="supplier" >
+        update supplier
+        <set >
+            <if test="supplieName != null and supplieName != ''" >
+                supplieName=#{supplieName},
+            </if>
+            <if test="supplierType != null and supplierType != ''" >
+                supplierType=#{supplierType},
+            </if>
+            <if test="license != null and license != ''" >
+                license=#{license},
+            </if>
+            <if test="organiztion != null and organiztion != ''" >
+                organiztion=#{organiztion},
+            </if>
+            <if test="stateTax != null and stateTax != ''" >
+                stateTax=#{stateTax},
+            </if>
+            <if test="landTax != null and landTax != ''" >
+                landTax=#{landTax},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    
+    <insert id="insertSupplier" parameterType="supplier" >
+        insert into supplier(supplierCode, supplieName, supplierType, license,organiztion,
+        stateTax, landTax, createUser)
+        
+        values(#{supplierCode}, #{supplieName},#{supplierType},#{license},#{organiztion},
+        #{stateTax},#{landTax},#{createUser})
+    </insert>
+</mapper>

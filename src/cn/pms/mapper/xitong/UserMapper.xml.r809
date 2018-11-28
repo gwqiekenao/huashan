@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.pms.mapper.xitong.UserMapper" >
+  <select id="findUserLogin" parameterType="User" resultType="User">
+		select * from User where userCode = #{userCode} and userPwd = #{userPwd} 
+	</select>
+	
+	<sql id="query_user_where">
+	 		<if test="userCode != null and userCode != ''">
+				and userCode like '%${userCode}%'
+			</if>
+			<if test="userName != null and userName != ''">
+				and userName like '%${userName}%'
+			</if>
+			<if test="userTel != null and userTel != ''">
+				and userTel like '%${userTel}%'
+			</if>
+			and isFlag = 0
+	</sql>
+	
+	<select id="getCount" resultType="int">
+		select count(*) from user
+		<where>
+			isFlag = 0
+			<include refid="query_user_where"></include>
+		</where>
+	</select>	
+	
+	<select id="findUserForm" resultType="User">
+		select * from user    
+		<where>
+		isFlag = 0 
+			<include refid="query_user_where"></include>
+		</where>
+		order by createTime desc 
+		limit #{pageModel.pageData},#{pageModel.eachPageNum} 	 
+	</select>
+	
+	<select id="updateUserById" resultType="User">
+		select * from user where id=#{id} and isFlag = 0
+	</select>
+	<select id="updateUserByIdss" resultType="User">
+		select * from user where id=#{id} and isFlag = 0
+	</select>
+	<select id="findUserAll" resultType="User">
+		select * from user where  isFlag = 0
+	</select>
+	<select id="selectUserByUserCode" resultType="User">
+		select * from user where userCode=#{userCode}  and isFlag = 0
+	</select>
+	<update id="updateUser" parameterType="User">
+		update User
+		<set>
+			<if test="userCode != null and userCode != ''">
+				userCode = #{userCode},
+			</if>
+			<if test="userName != null and userName != ''">
+				userName = #{userName},
+			</if>
+			<if test="userPwd != null and userPwd != ''">
+				userPwd = #{userPwd},
+			</if>
+			<if test="userTel != null and userTel != ''">
+				userTel = #{userTel},
+			</if>
+			<if test="userCountry != null and userCountry != ''">
+				userCountry = #{userCountry},
+			</if>
+			<if test="userSex !=null and userSex != ''">
+				userSex = #{userSex},
+			</if>
+			<if test="createTime != null and createTime !=''">
+				createTime = #{createTime},
+			</if>			
+		</set>
+		where id = #{id}
+	</update>
+ 
+	<update id="deleteUser" >
+        update user set isFlag=1 
+        where <foreach collection="id1" item="id" open="id in(" separator="," close=")">
+        	#{id}
+        </foreach>
+    </update>
+    
+    <update id="deleteUsers">
+    	update user set isFlag=1
+    	where userCode = #{userCode}
+    </update>
+    
+	<insert id="insertUser" parameterType="User">
+		insert into user(userCode,userName,userPwd,userTel,userCountry,userSex)
+		
+		values(#{userCode},#{userName},#{userPwd},#{userTel},#{userCountry},#{userSex})
+	</insert>
+</mapper>

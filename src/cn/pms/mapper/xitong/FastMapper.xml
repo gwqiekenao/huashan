@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.pms.mapper.xitong.FastMapper" >
+	<select id="selectAllFast"  resultType="Fast">
+		select * from fast where isFlag=0
+	</select> 
+	 <sql id="query_fast_where">
+  	<if test="code != null and code != ''">
+  		and code like '%${code}%'
+  	</if>
+  	<if test="codeName != null and codeName != ''">
+  		and codeName like '%${codeName}%'
+  	</if>
+  	<if test="fastTypeName != null and fastTypeName != ''">
+  		and fastTypeName like '%${fastTypeName}%'
+  	</if>
+   
+  </sql>
+  
+ <select id="getCount" resultType="int">
+		select count(*) from fast
+		<where>
+			<include refid="query_fast_where"></include>
+		</where>
+	</select>	
+	
+	<select id="findFastForm" resultType="Fast">
+		select * from fast 
+		<where>
+		 
+			<include refid="query_fast_where"></include>
+		</where>
+		order by createTime desc
+		limit #{pageModel.pageData},#{pageModel.eachPageNum} 		 
+	</select>
+	
+	<select id="updateById" resultType="Fast">
+		select * from fast where id=#{id}
+	</select>
+	
+	<select id="finFastYZ" resultType="Fast">
+		select * from fast where code=#{code}  
+	</select>
+	
+	<select id="finFastCodeName" resultType="Fast">
+		select * from fast where code=#{code}  and fastType=#{fastType}
+	</select>
+	
+	<select id="finFastType" resultType="Fast">
+		select * from fast where fastType=#{fastType}
+	</select>
+	
+	<select id="findFast" resultType="Fast">
+		select fastTypeName from fast 
+	</select>
+	<select id="selectFastByCode" resultType="Fast">
+		select * from fast where code=#{code}
+	</select>
+	<update id="updatePro" parameterType="Fast">
+		update fast 
+		<set>
+			<if test="fastType != null and fastType !=''">
+				fastType = #{fastType},
+			</if>
+			<if test="code != null and code !=''">
+				code = #{code},
+			</if> 
+			<if test="codeName  != null and codeName !=''">
+				codeName = #{codeName},
+			</if>
+			<if test="fastTypeName != null and fastTypeName !=''">
+				fastTypeName = #{fastTypeName},
+			</if>
+		</set>
+			where id = #{id}		 
+	</update>
+	<!-- <update id="updatePro" parameterType="Fast">
+		update Fast
+		<set>逗号少了,卡我一天,坑爹啊啊啊啊啊
+			<if test="fastType != null and fastType != ''">
+				fastType = #{fastType},
+			</if>
+			<if test="code != null and code != ''">
+				code = #{code},
+			</if>
+			<if test="codeName != null and codeName != ''">
+				codeName = #{codeName},
+			</if>
+			<if test="fastTypeName != null and fastTypeName != ''">
+				fastTypeName = #{fastTypeName},
+			</if>
+		</set>
+		where id = #{id}
+	</update> -->
+	<insert id="insertFast" parameterType="Fast">
+		insert into fast(fastType,code,codeName,fastTypeName,createUser)		
+		values(#{fastType},#{code},#{codeName},#{fastTypeName},#{createUser})
+	</insert>
+	
+	<update id="deleteFast">
+		update fast set isFlag=0
+		   where <foreach collection="id1" item="id" open="id in(" separator="," close=")">
+			#{id}
+		</foreach>
+	</update>
+	
+	<update id="deleteFasts">
+		update fast set isFlag=1
+		   where <foreach collection="id1" item="id" open="id in(" separator="," close=")">
+			#{id}
+		</foreach>
+	</update>
+	
+	<update id="deleteFastss">
+    	update fast set isFlag=1
+    	where code = #{code}
+    </update>
+    
+    <update id="deleteFastsss">
+    	update fast set isFlag=0
+    	where code = #{code}
+    </update>
+    
+</mapper>

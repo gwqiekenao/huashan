@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.pms.mapper.xitong.UserandroleMapper" >
+ 	<select id="findUserRole" resultType="Integer">
+ 		select roleId from userandrole where userId = #{userId}
+ 	</select>
+ 	
+ 	<select id="findAllURId" resultType="Userandrole">
+ 		select * from Userandrole where userId = #{userId} 
+ 	</select>
+ 	
+ 	<insert id="insertUserAndRole" parameterType="Userandrole">
+ 		insert into Userandrole(userId,roleId)
+ 		
+ 		values(#{userId},#{roleId})
+ 	</insert>
+ 	
+ 	<delete id="deleteUserAndRole">
+ 		delete from Userandrole where userId = #{userId} and roleId = #{roleId}
+ 	</delete>
+ 	<delete id="deleteCondition">
+ 		delete from Userandrole where userId = #{userId}
+ 	</delete>
+</mapper>

@@ -1,0 +1,48 @@
+.DialogBox{width:484px;border-radius:4px;outline: 0;
+	position: fixed;_position: absolute;z-index: 99;left: 0;font-size: 12px;
+line-height: 1.666;box-shadow: 0 0 10px rgba(0,0,0,.8);background: #fff;word-break: break-all;word-wrap: break-word; }
+.dialogCon{max-height: 635px;overflow-y:auto; }
+.DialogBox .i_alert{ padding-left: 70px;background: url(../images/warning.png) 20px 10px no-repeat; min-height: 50px;}
+.DialogBox .dia_hd{ 
+ 	border-radius: 4px 4px 0 0;text-align: left;color: #666;
+ 	position:relative;padding: 0 12px;height: 42px;line-height: 42px;
+	border-bottom: 1px solid #c2c2c2;cursor:move; font-size:14px; 
+	font-family:Microsoft Yahei; color:#fff;
+	background:linear-gradient(270deg,#0c84ce 0%,#0874b8 100%);
+	background:-moz-linear-gradient(270deg,#0c84ce 0%,#0874b8 100%);
+	background:-webkit-linear-gradient(270deg,#0c84ce 0%,#0874b8 100%);
+	background:-o-linear-gradient(270deg,#0c84ce 0%,#0874b8 100%);
+	background:-ms-linear-gradient(270deg,#0c84ce 0%,#0874b8 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient( startColorstr='#0c84ce' , endColorstr='#0874b8',GradientType=1 );}  }
+
+}
+ .DialogBox .dia_hd span{ font-size:12px; line-height:1;}
+ 
+.DialogBox .dia_hd .close_btn{font-family:arial; font-size:30px;  font-weight:200; color:#fff; text-decoration:none;float: right;}
+.DialogBox .dia_hd .close_btn:hover{color:#f00;}
+.DialogBox .dia_ft{width:100%;height:50px;padding: 10px  10px; background-color:#eaf7fe;
+	border-top: solid 1px #dcdfe2; border-radius:0 0 4px 4px;text-align:center; 
+	position:absolute;bottom:0;}
+.DialogBox .dia_ft a{ background-color: #3c87b1; display: inline-block;float: right;
+	height: 25px; width:60px; border:solid 1px #3c87b1; border-radius: 4px; text-align: center; margin-left: 10px;color: #fff; line-height: 23px; *line-height:20px;cursor: pointer;}
+.DialogBox .dia_ft .btnSub{
+	background-color: #0873b7;  color: #fff;
+	// border:solid 1px #f67e2e;
+}
+.DialogBox .dia_ft .btnCancel{
+	background-color: #fff;border:solid 1px #dedede;color: #737373;
+}
+/*.DialogBox .dia_ft .btnSub b{background: url(../images/icon.png) -42px -303px no-repeat;width: 13px;height: 10px;display: inline-block;margin-right: 5px;vertical-align: middle;}*/
+.DialogBox .dia_ft .btnSub:hover{
+	background-color: #309ade; 
+}
+.DialogBox .dia_ft .btnCancel:hover{
+	background-color: #e9edef;
+}
+ /*.DialogBox .dia_ft .btnCancel b{background: url(../images/icon.png) -70px -302px no-repeat;width: 12px;height: 12px;display: inline-block;margin-right: 5px;vertical-align: middle;}*/
+.pop{display: none; color:#262626;padding:0 20px 5px 20px;}
+#mask{position: absolute;z-index: 98;left: 0;top: 0;width: 100%;height: 100%;background: #000;}
+.sighicon{display:inline-block;width:50px;height:52px;
+	background:url(../images/icon_yesOrNo.png) no-repeat;
+	position:relative;top:0;left:-10px;}
+#quitBox>div{margin-top:35px;color:#666;font-size:14px;}

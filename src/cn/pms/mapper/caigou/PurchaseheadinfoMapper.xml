@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.pms.mapper.caigou.PurchaseheadinfoMapper" >
+ <sql id="query_purchase_where">
+	 		<if test="purchaseCode != null and purchaseCode != ''">
+				and phi.purchaseCode like '%${purchaseCode}%'
+			</if>
+			<if test="purchaseName != null and purchaseName != ''">
+				and phi.purchaseName like '%${purchaseName}%'
+			</if>
+			<if test="purchaseType != null and purchaseType != ''">
+				and phi.purchaseType=#{purchaseType}
+			</if>
+			<if test="projectName != null and projectName != ''">
+				 and pro.projectName like '%${projectName}%'
+			</if>
+			and phi.isFlag=0 and pro.isFlag=0
+	</sql>
+	
+	<select id="getCount"  parameterType="purchaseCustom" resultType="int">
+		select count(*) from purchaseheadinfo phi left join project pro on phi.projectId = pro.id 
+		<where>
+			<include refid="query_purchase_where"></include>
+		</where>
+	</select>
+	
+	<select id="findPurchaseInfo" parameterType="purchaseCustom" resultType="purchaseCustom">
+		select phi.*,pro.projectName,pro.projectCode from purchaseheadinfo phi left join project pro on phi.projectId = pro.id  
+		<where>
+			<include refid="query_purchase_where"></include>
+		</where>
+		order by phi.createTime desc
+		limit #{pageData},#{eachPageNum}
+		
+	</select>
+	
+	<select id="findAllPurchaseInfo" resultType="purchaseCustom">
+		select phi.*,pro.projectName,pro.projectCode from purchaseheadinfo phi left join project pro on phi.projectId = pro.id
+		where  phi.isFlag=0 and pro.isFlag=0
+		order by phi.createTime desc
+	</select>
+	
+	<select id="findPurchaseInfoById" parameterType="int" resultType="purchaseCustom">
+		select phi.*,pro.projectCode,pro.projectName from purchaseheadinfo phi,project pro 
+		 where phi.projectId = pro.id and phi.id=#{id}
+	</select>
+	
+	<update id="deletePurchases">
+        update purchaseheadinfo set isFlag=1 
+        where <foreach collection="codes" item="code" separator="or" >
+        	purchaseCode=#{code}
+        </foreach>
+    </update>
+    
+    <update id="updatePurHead" parameterType="Purchaseheadinfo" >
+    	update purchaseheadinfo 
+    	<set >
+            <if test="purchaseName != null and purchaseName != ''" >
+                purchaseName=#{purchaseName},
+            </if>
+            <if test="projectId != null" >
+                projectId=#{projectId},
+            </if>
+            <if test="moneyType != null and moneyType != ''" >
+                moneyType=#{moneyType},
+            </if>
+            <if test="estimateMoney != null" >
+                estimateMoney=#{estimateMoney},
+            </if>
+            <if test="purchaseType != null and purchaseType != ''" >
+                purchaseType=#{purchaseType},
+            </if>
+            <if test="purchaseRemark != null and purchaseRemark != ''" >
+                purchaseRemark=#{purchaseRemark},
+            </if>
+        </set>
+         where id = #{id}
+    </update>
+    
+    <insert id="insertPurHead" parameterType="Purchaseheadinfo" useGeneratedKeys="true" keyProperty="id">
+    	insert into purchaseheadinfo(purchaseCode,purchaseName,projectId,moneyType,
+    	estimateMoney,purchaseType,purchaseRemark,createUser)
+    	values(#{purchaseCode}, #{purchaseName},#{projectId},#{moneyType},#{estimateMoney},
+        #{purchaseType},#{purchaseRemark},#{createUser})
+    </insert>
+</mapper>

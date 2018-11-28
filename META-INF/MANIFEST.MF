@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: PMS4
+Bundle-SymbolicName: PMS4
+Bundle-Version: 1.0.0.qualifier
+Export-Package: cn.pms.controller,
+ cn.pms.mapper.caigou,
+ cn.pms.mapper.hetong,
+ cn.pms.mapper.xitong,
+ cn.pms.pojo,
+ cn.pms.service,
+ cn.pms.serviceImpl,
+ cn.pms.util,
+ mybatis,
+ spring

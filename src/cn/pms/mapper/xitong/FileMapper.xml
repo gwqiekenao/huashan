@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.pms.mapper.xitong.FileMapper" >
+ 
+ <sql id="query_file_where">
+			<if test="userName != null and userName != ''">
+				and createUser = #{userName}
+			</if>
+			and isFlag=0
+	</sql>
+	
+	<select id="getCount" resultType="int">
+		select count(*) from file
+		<where>
+			<include refid="query_file_where"></include>
+		</where>
+	</select>
+	
+	<select id="findFile" resultType="File">
+		select * from file  
+		<where>
+			<include refid="query_file_where"></include>
+		</where>
+		order by createTime desc
+		limit #{pageModel.pageData},#{pageModel.eachPageNum} 
+		
+	</select>
+	
+	<update id="delFile">
+		update file set isFlag = 1 where id=#{id}
+	</update>
+	
+	<insert id="insertFile" parameterType="File">
+		insert into file(fileName,fileType,objId,createUser)
+		values(#{fileName}, #{fileType},#{objId},#{createUser})
+	</insert>
+</mapper>

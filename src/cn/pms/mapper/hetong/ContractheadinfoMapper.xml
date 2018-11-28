@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.pms.mapper.hetong.ContractheadinfoMapper" >
+ 	<!-- //招标编号查询 -->
+	<!-- public List<Tenderingheadinfo> tenderNumberEnquiry(QueryVo vo); -->
+ 	<select id="tenderNumberEnquiry" parameterType="QueryVo" resultType="Tenderingheadinfo">
+		select * from tenderingheadinfo 
+		<where>
+			<if test="tenderingCode != null and tenderingCode !=''" >
+				tenderingCode like "%"#{tenderingCode}"%"
+			</if>
+			<if test="tenderingName != null and tenderingName !=''" >
+				and tenderingName like "%"#{tenderingName}"%"
+			</if>
+		</where>
+		limit #{startRow},#{size}
+	</select>
+	
+	<!-- //招标编号总条数
+	public Integer tenderCountByQueryVo(QueryVo vo); -->
+	<select id="tenderCountByQueryVo" parameterType="QueryVo" resultType="Integer">
+		select count(1) from tenderingheadinfo
+		<where>
+			<if test="tenderingCode != null and tenderingCode !=''" >
+				tenderingCode like "%"#{tenderingCode}"%"
+			</if>
+			<if test="tenderingName != null and tenderingName !=''" >
+				and tenderingName like "%"#{tenderingName}"%"
+			</if>
+		</where>
+	</select>
+	
+<!--	//合同总条数
+ 	public Integer contractCountByQueryVo(QueryVo vo); -->
+	<select id="contractCountByQueryVo" parameterType="QueryVo" resultType="Integer">
+		select count(1) FROM contractheadinfo c LEFT JOIN supplier s ON
+		c.supplierId = s.id
+		LEFT JOIN tenderingheadinfo t on 
+		c.tenderingHeadInfoId = t.id 
+		LEFT JOIN fast f ON
+		c.moneyType = f.code
+			<where>
+				c.isFlag = 0
+			<if test="contractCode != null and contractCode !=''">
+				and contractCode like "%"#{contractCode}"%"
+			</if>
+			<if test="contractName != null and contractName !=''">
+				and contractName like "%"#{contractName}"%"
+			</if>
+			<if test="tenderingCode != null and tenderingCode !=''">
+				and tenderingCode like "%"#{tenderingCode}"%"
+			</if>
+			<if test="startTime != null and startTime !=''">
+				and c.startTime <![CDATA[>=]]> #{startTime1}
+			</if>
+			<if test="endTime != null and endTime !=''">
+				and c.endTime <![CDATA[<=]]> #{endTime1} 
+			</if>
+			<if test="supplieName != null and supplieName !=''">
+				and supplieName like "%"#{supplieName}"%"
+			</if>
+			<if test="companyName != null and companyName !=''">
+				and companyName like "%"#{companyName}"%"
+			</if>
+			<if test="contractType != null and contractType !=''">
+				and contractType like "%"#{contractType}"%"
+			</if>
+		</where>
+	</select>
+
+<!-- 	//合同分页对象
+	public List<Contractheadinfo> contractEnquiry(QueryVo vo);
+-->	<select id="contractEnquiry" parameterType="QueryVo" resultMap="xxx">
+		SELECT c.id,c.tenderingHeadInfoId,c.contractCode,c.contractName,c.companyName,
+		c.supplierId,s.supplieName,t.tenderingCode,c.contractType,
+		c.contractMoney,f.codeName,c.startTime,c.endTime,
+		c.userId,c.createUser,c.createTime,c.isFlag,
+		c.supplierId,c.tenderingHeadInfoId,c.moneyType
+		FROM contractheadinfo c LEFT JOIN supplier s ON
+		c.supplierId = s.id
+		LEFT JOIN tenderingheadinfo t on 
+		c.tenderingHeadInfoId = t.id 
+		LEFT JOIN fast f ON
+		c.moneyType = f.code
+		<where>
+			c.isFlag = 0
+			<if test="contractCode != null and contractCode !=''">
+				and contractCode like '%${contractCode}%'
+			</if>
+			<if test="contractName != null and contractName !=''">
+				and contractName like "%"#{contractName}"%"
+			</if>
+			<if test="tenderingCode != null and tenderingCode !=''">
+				and t.tenderingCode like "%"#{tenderingCode}"%"
+			</if>
+			<if test="startTime != null and startTime !=''">
+				and c.startTime <![CDATA[>=]]> #{startTime1}
+			</if>
+			<if test="endTime != null and endTime !=''">
+				and c.endTime <![CDATA[<=]]> #{endTime1} 
+			</if>
+			<if test="supplieName != null and supplieName !=''">
+				and s.supplieName like "%"#{supplieName}"%"
+			</if>
+			<if test="companyName != null and companyName !=''">
+				and companyName like "%"#{companyName}"%"
+			</if>
+			<if test="contractType != null and contractType !=''">
+				and contractType like "%"#{contractType}"%"
+			</if>
+		</where>
+		Order By createTime Desc
+		limit #{startRow},#{size}		
+	</select>
+	
+	<select id="allContractEnquiry" resultMap="xxx">
+		SELECT c.id,c.tenderingHeadInfoId,c.contractCode,c.contractName,c.companyName,
+		c.supplierId,s.supplieName,t.tenderingCode,c.contractType,
+		c.contractMoney,f.codeName,c.startTime,c.endTime,
+		c.userId,c.createUser,c.createTime,c.isFlag,
+		c.supplierId,c.tenderingHeadInfoId,c.moneyType
+		FROM contractheadinfo c LEFT JOIN supplier s ON
+		c.supplierId = s.id
+		LEFT JOIN tenderingheadinfo t on 
+		c.tenderingHeadInfoId = t.id 
+		LEFT JOIN fast f ON
+		c.moneyType = f.code
+		<where>
+			c.isFlag = 0
+		</where>
+		Order By createTime Desc
+	</select>
+	
+	<resultMap type="Contractheadinfo" id="xxx">
+		<id column="id" property="id"></id>
+		<result column="tenderingHeadInfoId" property="tenderingHeadInfoId"/>
+		<result column="contractCode" property="contractCode"/>
+		<result column="contractName" property="contractName"/>
+		<result column="companyName" property="companyName"/>
+		<result column="supplierId" property="supplierId"/>
+		<result column="contractType" property="contractType"/>
+		<result column="contractMoney" property="contractMoney"/>
+		<result column="moneyType" property="moneyType" />
+		<result column="startTime" property="startTime"/>
+		<result column="endTime" property="endTime"/>
+		<result column="userId" property="userId"/>
+		<result column="createUser" property="createUser"/>
+		<result column="createTime" property="createTime"/>
+		<result column="isFlag" property="isFlag"/>
+		<result column="supplierId" property="supplierId"/>
+		<result column="tenderingHeadInfoId" property="tenderingHeadInfoId"/>
+		<!--一对一 -->
+		<association property="supplier" javaType="Supplier">
+			<id column="supplierId" property="id"/>
+			<result column="supplieName" property="supplieName"/>
+		</association>
+		<association property="tenderingheadinfo" javaType="Tenderingheadinfo">
+			<id column="tenderingHeadInfoId" property="id"/>
+			<result column="tenderingCode" property="tenderingCode"/>
+		</association>
+		<association property="fast" javaType="Fast">
+			<result column="moneyType" property="code"/>
+			<result column="codeName" property="codeName"/>
+		</association>
+	</resultMap>
+	
+	<!-- //通过id查合同头表
+	public Contractheadinfo contractQueryById(Integer id);	 -->
+	<select id="contractQueryById" parameterType="Integer" resultMap="xxx">
+		SELECT c.contractCode,c.tenderingHeadInfoId,c.contractName,c.companyName,
+		c.supplierId,s.supplieName,t.tenderingCode,c.contractType,
+		c.contractMoney,c.moneyType,f.codeName,c.startTime,c.endTime,
+		c.userId,c.createUser,c.createTime,c.isFlag
+		FROM contractheadinfo c LEFT JOIN supplier s ON
+		c.supplierId = s.id
+		LEFT JOIN tenderingheadinfo t on 
+		c.tenderingHeadInfoId = t.id 
+		LEFT JOIN fast f ON
+		c.moneyType = f.code
+		where c.id = #{id}
+	</select> 
+				
+	 <!--  //通过tenderingHeadInfoId查招标头,行
+	public List<Tenderingheadinfo> queryTenderInfo(Integer tenderingHeadInfoId);   -->
+	<resultMap type="Tenderingheadinfo" id="tenderInfo">
+		<id column="tenderingHeadId" property="id"></id>
+		<result column="purchaseId" property="purchaseId"></result>
+		<!--  一对多招标行表  -->
+		<collection property="tenderingplanList" ofType="Tenderingplan">
+			<id column="id1" property="id"></id>
+			<result column="tenderingNum" property="tenderingNum"></result>
+			<result column="purchasePlanId" property="purchasePlanId"></result>
+			<result column="tenderingHeadId" property="tenderingHeadId"></result>
+		</collection>
+	</resultMap>
+	<select id="queryTenderInfo" parameterType="Integer" resultMap="tenderInfo">
+		SELECT th.id,th.purchaseId,tp.id,tp.tenderingNum,tp.purchasePlanId,tp.tenderingHeadId
+		FROM tenderingheadinfo th LEFT JOIN tenderingplan tp ON
+		tp.tenderingHeadId = th.id
+		WHERE th.id = #{tenderingHeadInfoId}
+	</select>
+	
+	<!--  //查采购头,行,项目
+	public List<Purchaseheadinfo> queryPurchaseInfo(Integer purchaseId);  -->
+	<resultMap type="Purchaseheadinfo" id="purchaseInfo">
+		<id column="purchaseId" property="id"></id>
+		<result column="purchaseName" property="purchaseName"></result>
+		<result column="purchaseType" property="purchaseType"></result>
+		<!--  一对一项目表 -->
+		<association property="projects" javaType="Project">
+			<id column="projectId" property="id"></id>
+			<result column="projectName" property="projectName"/>
+		</association>
+		 <!-- 一对多 采购行表 -->
+		<collection property="purchaseplanList" ofType="Purchaseplan">
+			<id column="id1" property="id"/>
+			<result column="materialId" property="materialId" />
+			<result column="demandNum" property="demandNum" />
+			<result column="provisioning" property="provisioning" />
+			<result column="purchaseMethod" property="purchaseMethod" />
+			<result column="purchaseCompany" property="purchaseCompany" />
+			<result column="remark" property="remark" />
+		</collection>
+	</resultMap>
+	<select  id="queryPurchaseInfo" parameterType="Integer" resultMap="purchaseInfo"> 
+		SELECT ph.*,pp.*,p.*
+		FROM purchaseheadinfo ph 
+		LEFT JOIN purchaseplan pp ON		
+		ph.id = pp.purchaseId
+		LEFT JOIN project p ON
+		ph.projectId = p.id
+		Where ph.id = #{purchaseId}
+	</select>
+	
+	<!--  //查询所有物质信息
+	public List<Material> queryAllMaterial();   -->
+	<select id="queryAllMaterial" resultType="Material">
+		SELECT * FROM material
+	</select>
+	
+	<!-- //通过id查合同行信息wwwwwwwwwwww
+	public Contractinfo contractLineQueryByCode(String code); -->
+	 <select id="contractLineQueryByCode" parameterType="String" resultType="Contractinfo">
+		select * from contractinfo where contractCode = #{code}
+	</select> 
+	
+	<!-- //查询user分页对象
+	public List<User> queryUserPageList(QueryVo vo); -->
+	<select id="queryUserPageList" parameterType="QueryVo" resultType="User">
+		SELECT * FROM user
+		<where>
+		<if test="userCode != null and userCode != ''">
+			userCode like "%"#{userCode}"%"
+		</if>
+		<if test="userName != null and userName != ''">
+			and userName like "%"#{userName}"%"
+		</if>
+		</where>
+		limit #{startRow},#{size}
+	</select>
+
+<!-- 	//查询user中条数
+	public int queryUserTotal(QueryVo vo); -->
+	<select id="queryUserTotal" parameterType="QueryVo" resultType="Integer">
+		SELECT count(1) FROM user
+		<where>
+		<if test="userCode != null and userCode != ''">
+			userCode like "%"#{userCode}"%"
+		</if>
+		<if test="userName != null and userName != ''">
+			and userName like "%"#{userName}"%"
+		</if>
+		</where>
+	</select> 
+	
+	<!-- //提交合同头修改
+	public void updateContractHead(Contractheadinfo contractheadinfo); -->
+	<update id="updateContractHead" parameterType="Contractheadinfo">
+		update contractheadinfo 
+			set tenderingHeadInfoId = #{tenderingHeadInfoId},contractCode = #{contractCode},
+				contractName = #{contractName},contractType = #{contractType},
+				companyName = #{companyName},supplierId = #{supplierId},
+				contractMoney = #{contractMoney},moneyType = #{moneyType},
+				startTime = #{startTime},endTime = #{endTime},
+				userId = #{userId},createUser = #{createUser},
+				createTime = #{createTime},isFlag = #{isFlag}
+		where id = #{id}
+	</update>
+
+
+<!-- 	//提交合同文件信息
+	public void updateContractInfo(Contractinfo contractinfo); -->
+	<update id="updateContractInfo" parameterType="Contractinfo">
+		update contractinfo 
+			set  firstType = #{firstType},secondType = #{secondType},
+				 pay = #{pay},info = #{info},
+				 qualifications = #{qualifications},rule = #{rule},
+				 explains = #{explains},createUser = #{createUser},
+				 createTime = #{createTime},isFlag = #{isFlag}
+			where contractCode = #{contractCode}
+	</update>
+	
+	<!-- //查找合同经办人信息
+	public User queryUserInfoById(Integer userId); -->
+	<select id="queryUserInfoById" parameterType="Integer" resultType="User">
+		SELECT * FROM user WHERE id = #{id}
+	</select>
+	
+	<!-- //查找供应商条数
+	public int supplierCountByQueryVo(QueryVo vo); -->
+	<select id="supplierCountByQueryVo" parameterType="QueryVo" resultType="Integer">
+		SELECT count(1) FROM supplier
+		<where>
+			<if test="supplierCode != null and supplierCode != ''">
+				supplierCode like "%"#{supplierCode}"%"
+			</if>
+			<if test="supplieName != null and supplieName != ''">
+				and supplieName like "%"#{supplieName}"%"
+			</if>
+		</where>
+	</select>
+
+
+	<!-- //查找供应商信息
+	public List<Supplier> supplierInfoByQueryVo(QueryVo vo); -->
+	<select id="supplierInfoByQueryVo" parameterType="QueryVo" resultType="Supplier">
+		SELECT * FROM supplier
+		<where>
+			<if test="supplierCode != null and supplierCode != ''">
+				supplierCode like "%"#{supplierCode}"%"
+			</if>
+			<if test="supplieName != null and supplieName != ''">
+				and supplieName like "%"#{supplieName}"%"
+			</if>
+		</where>
+		limit #{startRow},#{size}
+	</select>
+	
+	<!-- //新增合同头表
+	public void appendContractHeadInfo(Contractheadinfo contractheadinfo); -->
+	<insert id="appendContractHeadInfo" parameterType="Contractheadinfo">
+		insert into contractheadinfo(tenderingHeadInfoId,contractCode,contractName,contractType,companyName,supplierId,contractMoney,moneyType,startTime,endTime,userId,createUser,createTime,isFlag)
+		values(#{tenderingHeadInfoId},#{contractCode},#{contractName},#{contractType},#{companyName},#{supplierId},#{contractMoney},#{moneyType},#{startTime},#{endTime},#{userId},#{createUser},#{createTime},#{isFlag})
+	</insert>
+
+	<!-- //新增合同行表
+	public void appendContractInfo(Contractinfo contractinfo); -->
+	<insert id="appendContractInfo" parameterType="Contractinfo">
+		insert into contractinfo(firstType,secondType,pay,info,qualifications,rule,explains,contractCode,createUser,createTime,isFlag)
+		values(#{firstType},#{secondType},#{pay},#{info},#{qualifications},#{rule},#{explains},#{contractCode},#{createUser},#{createTime},#{isFlag})
+	</insert>
+	
+	<!-- //合同删除
+	public void contractDelete(Integer id); -->
+	<update id="contractDelete" parameterType="Integer">
+		update contractheadinfo set isFlag = 1 where id = #{id}
+	</update>
+</mapper>

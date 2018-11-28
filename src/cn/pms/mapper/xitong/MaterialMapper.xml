@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.pms.mapper.xitong.MaterialMapper" >
+  
+ <!--  //查询物质总条数
+	public Integer queryTotalRows(QueryVo vo); -->
+ 	<select id="queryTotalRows" parameterType="QueryVo" resultType="Integer">
+		SELECT count(1) FROM material 
+  		<where>
+  			isFlag = 0
+  			<if test="materialCode != null and materialCode != ''">
+  				and materialCode like "%"#{materialCode}"%"
+  			</if>
+  			<if test="materialName != null and materialName != ''">
+  				and materialName like "%"#{materialName}"%"
+  			</if>
+  			<if test="materialType != null and materialType != ''">
+  				and materialType like "%"#{materialType}"%"
+  			</if>
+  			<if test="keyMaterial != null">
+  				and keyMaterial = #{keyMaterial}
+  			</if>
+  		</where>
+	</select>
+
+	<!-- //查询物质分页结果集
+	public List<Material> materialEnquiry(QueryVo vo); -->
+   	<select id="materialEnquiry" parameterType="QueryVo" resultType="Material">
+  		SELECT * FROM material 
+  		<where>
+  			isFlag = 0
+  			<if test="materialCode != null and materialCode != ''">
+  				and materialCode like "%"#{materialCode}"%"
+  			</if>
+  			<if test="materialName != null and materialName != ''">
+  				and materialName like "%"#{materialName}"%"
+  			</if>
+  			<if test="materialType != null and materialType != ''">
+  				and materialType like "%"#{materialType}"%"
+  			</if>
+  			<if test="keyMaterial != null">
+  				and keyMaterial = #{keyMaterial}
+  			</if>
+  		</where>
+  		Order By createTime Desc
+  		limit #{startRow},#{size}
+  	</select>
+  	
+  	<select id="queryAllMaterialList" resultType="Material">
+  		SELECT * FROM material 
+  		<where>
+  			isFlag = 0
+  		</where>
+  		Order By createTime Desc
+  	</select>
+  	
+  	<!-- //通过id查找物资
+	public Material queryMaterialById(Integer id); -->
+	<select id="queryMaterialById" parameterType="Integer" resultType="Material">
+		SELECT * FROM material where id = #{id} and isFlag = 0
+	</select>
+	
+	<!-- //更新物资
+	public void updateMaterial(Material material); -->
+ 	<update id="updateMaterial" parameterType="Material">
+		update material set
+			materialCode = #{materialCode},materialName = #{materialName},
+			materialUnit = #{materialUnit},
+			materialType = #{materialType},estimateMoney = #{estimateMoney},
+			standard = #{standard},keyMaterial = #{keyMaterial},
+			grossWeight = #{grossWeight},netWeight = #{netWeight},
+			stratTime = #{stratTime},endTime = #{endTime},
+			materialRemark = #{materialRemark},createUser = #{createUser},
+			createTime = #{createTime},isFlag = #{isFlag}
+		<where>
+			id = #{id}
+		</where>
+	</update>
+	
+	<!--  //新增物资
+	public void insertMaterial(Material material); -->
+	 <insert id="insertMaterial" parameterType="Material">
+	 	insert into material(materialCode,materialName,materialUnit,materialType,estimateMoney,standard,keyMaterial,grossWeight,netWeight,stratTime,endTime,materialRemark,createUser,createTime,isFlag)
+	 	values(#{materialCode},#{materialName},#{materialUnit},#{materialType},#{estimateMoney},#{standard},#{keyMaterial},#{grossWeight},#{netWeight},#{stratTime},#{endTime},#{materialRemark},#{createUser},#{createTime},#{isFlag})
+	 </insert>
+	 
+	 <sql id="query_material_where">
+	 		<if test="materialCode != null and materialCode != '' and materialCode !='undefined'">
+				and materialCode like '%${materialCode}%'
+			</if>
+			<if test="materialName != null and materialName != '' and materialName !='undefined'">
+				and materialName like '%${materialName}%'
+			</if>
+			<if test="materialType != null and materialType != '' and materialType !='undefined'">
+				and materialType like '%${materialType}%'
+			</if>
+			and isFlag=0
+	</sql>
+	
+	<select id="getCount" resultType="int">
+		select count(*) from material
+		<where>
+			<include refid="query_material_where"></include>
+		</where>
+	</select>
+	
+	<select id="findMaterial" resultType="Material">
+		select * from material  
+		<where>
+			<include refid="query_material_where"></include>
+		</where>
+		limit #{pageModel.pageData},#{pageModel.eachPageNum} 
+		
+	</select>
+	
+	<!-- //删除物资
+	public void deleteMaterial(Integer id); -->
+	<update id="deleteMaterial" parameterType="Integer" >
+		update material set isFlag = 1 where id = #{id}
+	</update>
+</mapper>
